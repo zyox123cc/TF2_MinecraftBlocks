@@ -1,11 +1,10 @@
 # Minecraft Blocks in Team Fortress 2
 ### Commands
-sm_block - Selects a block to build with
-sm_build - Builds selected block
-sm_break - Break a block under the crosshair
-sm_limit - Displays current block amount on map
-
-sm_clearblocks (BAN) - Clears all blocks on map
+- sm_block - Selects a block to build with
+- sm_build - Builds selected block
+- sm_break - Break a block under the crosshair
+- sm_limit - Displays current block amount on map
+- sm_clearblocks (Ban Flag) - Clears all blocks on map
 
 ### Features
 - You can build with variety of blocks

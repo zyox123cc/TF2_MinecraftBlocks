@@ -5,7 +5,7 @@
 #include <tf2_stocks>
 
 #define PLUGIN_AUTHOR "Moonly Days"
-#define PLUGIN_VERSION "1.01"
+#define PLUGIN_VERSION "0.05"
 
 int BlockSelected[MAXPLAYERS+1];
 int BlockLimit = 256;
@@ -30,19 +30,10 @@ public void OnPluginStart()
 	RegAdminCmd("sm_clearblocks", cKillBlocks, ADMFLAG_BAN, "Clears all Minecraft Blocks");
 }
 
-public Action Hook_EntitySound(int clients[64],
-  int &numClients,
-  char sample[PLATFORM_MAX_PATH],
-  int &client,
-  int &channel,
-  float &volume,
-  int &level,
-  int &pitch,
-  int &flags,
-  char soundEntry[PLATFORM_MAX_PATH],
-  int &seed) //Yes, a sound hook is literally the best way to hook this event.
+public Action Hook_EntitySound(int clients[64],  int &numClients,  char sample[PLATFORM_MAX_PATH],  int &client,  int &channel,  float &volume,  int &level,  int &pitch,  int &flags,  char soundEntry[PLATFORM_MAX_PATH],  int &seed) //Yes, a sound hook is literally the best way to hook this event.
 {
-	if(StrContains(sample, "hit", false) != -1) //When a Homewrecker or Neon sign sound goes off
+	if(!(1<=client<=MaxClients) || !IsClientInGame(client))return Plugin_Continue;
+	if(StrContains(sample, "hit", false) != -1) 
 	{
 		new Float:angles[3];
 		new Float:eyepos[3];
@@ -59,7 +50,7 @@ public Action Hook_EntitySound(int clients[64],
 			GetEntPropVector(ent, Prop_Send, "m_vecOrigin", EntPos);
 			GetEntPropVector(client, Prop_Send, "m_vecOrigin", ClientPos);
 			new Float:Distance = GetVectorDistance(EntPos, ClientPos, false);
-			if (Distance < 100.0) //Make sure they're close enough to the building, it's pretty easy to trigger the sound without being in range
+			if (Distance < 100.0)
 			{
 				if (IsValidBlock(ent))
 				{
