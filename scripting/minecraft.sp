@@ -8,8 +8,8 @@
 #define PLUGIN_VERSION "0.05"
 
 int BlockSelected[MAXPLAYERS+1];
-int BlockLimit = 256;
-
+int BlockLimit = 2560;
+//修改上限
 
 public Plugin myinfo =
 {
@@ -23,11 +23,11 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	AddNormalSoundHook(NormalSHook:Hook_EntitySound);
-	RegConsoleCmd("sm_build", cBuildBlock, "Builds a block", 0);
-	RegConsoleCmd("sm_block", cSelBlock, "Selects a block", 0);
-	RegConsoleCmd("sm_break", cDestroyBlock, "Destroys a block", 0);
-	RegConsoleCmd("sm_limit", cCurrentLimit, "Displays Block limit", 0);
-	RegAdminCmd("sm_clearblocks", cKillBlocks, ADMFLAG_BAN, "Clears all Minecraft Blocks");
+	RegConsoleCmd("minecraft_build", cBuildBlock, "Builds a block", 0);
+	RegConsoleCmd("minecraft_block", cSelBlock, "Selects a block", 0);
+	RegConsoleCmd("minecraft_break", cDestroyBlock, "Destroys a block", 0);
+	RegConsoleCmd("minecraft_limit", cCurrentLimit, "Displays Block limit", 0);
+	RegAdminCmd("minecraft_clearblocks", cKillBlocks, ADMFLAG_BAN, "Clears all Minecraft Blocks");
 }
 
 public Action Hook_EntitySound(int clients[64],  int &numClients,  char sample[PLATFORM_MAX_PATH],  int &client,  int &channel,  float &volume,  int &level,  int &pitch,  int &flags,  char soundEntry[PLATFORM_MAX_PATH],  int &seed) //Yes, a sound hook is literally the best way to hook this event.
@@ -136,7 +136,7 @@ public int mBlocks(Menu menu, MenuAction action, int param1, int param2)
 		menu.GetItem(param2, info, sizeof(info));
 		int ID = StringToInt(info);
 		BlockSelected[param1] = ID;
-		PrintToChat(param1, "[Minecraft] Selected block: %s", info);
+		PrintToChat(param1, "[Minecraft] 已選擇編號: %s  方塊", info);
 	}else if (action == MenuAction_End)
 	{
 			delete menu;
@@ -147,31 +147,31 @@ public int mBlocks(Menu menu, MenuAction action, int param1, int param2)
 public Action cSelBlock(int client, int args)
 {
 	Menu menu = new Menu(mBlocks);
-	menu.SetTitle("Select block");
-	menu.AddItem("0", "Grass");
-	menu.AddItem("1", "Dirt");
-	menu.AddItem("2", "Stone");
-	menu.AddItem("3", "Cobblestone");
-	menu.AddItem("4", "Bedrock");
-	menu.AddItem("5", "Coal Ore");
-	menu.AddItem("6", "Iron Ore");
-	menu.AddItem("7", "Gold Ore");
-	menu.AddItem("8", "Diamond Ore");
-	menu.AddItem("9", "Wooden Planks");
-	menu.AddItem("10", "Oak Log");
-	menu.AddItem("11", "Bookshelf");
-	menu.AddItem("12", "Crafting Table");
-	menu.AddItem("13", "Bricks");
+	menu.SetTitle("選擇方塊");
+	menu.AddItem("0", "草地");
+	menu.AddItem("1", "泥土");
+	menu.AddItem("2", "石頭");
+	menu.AddItem("3", "鵝卵石");
+	menu.AddItem("4", "基岩");
+	menu.AddItem("5", "煤礦");
+	menu.AddItem("6", "鐵礦");
+	menu.AddItem("7", "金礦");
+	menu.AddItem("8", "鑽石礦");
+	menu.AddItem("9", "木頭");
+	menu.AddItem("10", "黑橡木原木");
+	menu.AddItem("11", "書櫃");
+	menu.AddItem("12", "工作台");
+	menu.AddItem("13", "紅磚");
 	menu.AddItem("14", "TNT");
-	menu.AddItem("15", "Chest");
-	menu.AddItem("16", "Sand");
-	menu.AddItem("17", "Pumpkin");
-	menu.AddItem("18", "Furnace");
-	menu.AddItem("19", "Leaves");
-	menu.AddItem("20", "Iron Block");
-	menu.AddItem("21", "Gold Block");
-	menu.AddItem("22", "Diamond Block");
-	menu.AddItem("23", "Glass");
+	menu.AddItem("15", "儲物箱");
+	menu.AddItem("16", "沙子");
+	menu.AddItem("17", "南瓜");
+	menu.AddItem("18", "熔爐");
+	menu.AddItem("19", "叢林木樹葉");
+	menu.AddItem("20", "鐵磚");
+	menu.AddItem("21", "金磚");
+	menu.AddItem("22", "鑽石磚");
+	menu.AddItem("23", "玻璃");
 	menu.ExitButton = true;
 	menu.Display(client, 20);
 	return Plugin_Handled;
@@ -181,7 +181,7 @@ public Action cBuildBlock(int client, int args)
 {
 	if (BlocksAmount() >= BlockLimit)
 	{
-		PrintToChat(client, "[Minecraft] Limit of %d exceeded. Destroy some other blocks to build", BlockLimit);
+		PrintToChat(client, "[Minecraft] 上限超出 %d . 摧毀先前方塊來建造", BlockLimit);
 		return Plugin_Handled;
 	}
 	float start[3];
@@ -270,7 +270,7 @@ public Action cKillBlocks(int client, int args)
 			AcceptEntityInput(block, "Kill", -1, -1);
 		}
 	}
-	PrintToChatAll("[Minecraft] All blocks were removed. Map is now clean!");
+	PrintToChatAll("[Minecraft]所有方塊已經被清除. 嗯!真乾淨!");
 	return Plugin_Handled;
 }
 
@@ -355,4 +355,4 @@ stock GetSlotFromPlayerWeapon(iClient, iWeapon)
         }
     }
     return -1;
-}  
+}
